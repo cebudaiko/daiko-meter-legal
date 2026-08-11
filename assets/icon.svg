@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024" role="img" aria-label="じろちゃんず カエルメーター">
+  <rect width="1024" height="1024" fill="#163D6D"/>
+  <path d="M148 526c0-256 163-392 364-392s364 136 364 392v270H148z" fill="#FFF5C9"/>
+  <g data-part="frog-face">
+    <circle cx="322" cy="366" r="126" fill="#79C94B" stroke="#163D6D" stroke-width="28"/>
+    <circle cx="702" cy="366" r="126" fill="#79C94B" stroke="#163D6D" stroke-width="28"/>
+    <path d="M252 450c0-128 116-222 260-222s260 94 260 222v184c0 144-116 260-260 260S252 778 252 634z" fill="#79C94B" stroke="#163D6D" stroke-width="28"/>
+    <circle cx="364" cy="366" r="38" fill="#FFF5C9" stroke="#163D6D" stroke-width="18"/>
+    <circle cx="660" cy="366" r="38" fill="#FFF5C9" stroke="#163D6D" stroke-width="18"/>
+    <circle cx="372" cy="374" r="14" fill="#163D6D"/>
+    <circle cx="652" cy="374" r="14" fill="#163D6D"/>
+    <path d="M406 700c64 52 148 52 212 0" fill="none" stroke="#163D6D" stroke-width="28" stroke-linecap="round"/>
+  </g>
+  <path data-part="meter-arc" d="M350 704a190 190 0 0 1 324 0" fill="none" stroke="#F97316" stroke-width="34" stroke-linecap="round"/>
+  <path d="M512 704l104-78" fill="none" stroke="#163D6D" stroke-width="24" stroke-linecap="round"/>
+  <circle cx="512" cy="704" r="30" fill="#F97316" stroke="#163D6D" stroke-width="14"/>
+</svg>

@@ -1,25 +1,96 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>DAIKO METER — 法令情報</title>
-  <style>
-    body { font-family: 'Noto Sans JP', system-ui, sans-serif; line-height: 1.8; color: #1a1a1a;
-           max-width: 760px; margin: 0 auto; padding: 24px; background: #fff; }
-    h1 { font-size: 1.5rem; }
-    ul { font-size: 1.05rem; }
-    a { color: #0a58ca; }
-    .muted { color: #666; font-size: .9rem; }
-  </style>
+  <meta name="description" content="距離料金と低速時間料金を同じ計算エンジンで試せる、買い切り型メーターアプリ『じろちゃんず』のWeb体験版。">
+  <title>じろちゃんず｜走った距離も、止まった時間も。</title>
+  <link rel="icon" href="./assets/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./css/site.css">
+  <link rel="stylesheet" href="./css/demo.css">
 </head>
 <body>
-  <h1>DAIKO METER — 法令情報</h1>
-  <p class="muted">タクシー/代行 料金メーターアプリ（¥500・買い切り）の公開法令ページです。</p>
-  <ul>
-    <li><a href="privacy-policy.html">プライバシーポリシー</a></li>
-    <li><a href="tokushoho.html">特定商取引法に基づく表記</a></li>
-  </ul>
-  <p class="muted">運営者: セブ代行 ／ お問い合わせ: info@cebudaiko.com</p>
+  <a class="skip-link" href="#webDemo">Web体験版へ移動</a>
+  <header class="site-header">
+    <a class="brand" href="#hero" aria-label="じろちゃんず ホーム">
+      <img src="./assets/icon.svg" alt="" width="48" height="48">
+      <span>じろちゃんず</span>
+    </a>
+    <nav class="store-nav" aria-label="アプリストア">
+      <span class="store-badge" data-store="apple">App Store <strong>公開準備中</strong></span>
+      <span class="store-badge" data-store="google">Google Play <strong>公開準備中</strong></span>
+    </nav>
+  </header>
+
+  <main>
+    <div class="hero-demo-shell">
+      <section id="hero" class="hero" aria-labelledby="heroTitle">
+        <p class="eyebrow">代行・送迎の現場に、迷わないメーター。</p>
+        <h1 id="heroTitle">走った距離も、<br><em>止まった時間も。</em></h1>
+        <p class="hero-lead">距離と低速時間を、ひとつの料金表で見やすく。計測から精算、領収証、日々の売上まで端末の中で完結します。</p>
+        <ul class="product-promises" aria-label="商品の特長">
+          <li><strong>完全オフライン</strong><span>通信が不安定な現場でも</span></li>
+          <li><strong>自由な料金設定</strong><span>自社の運賃表に合わせて</span></li>
+          <li><strong>買い切り</strong><span>毎月の利用料なし</span></li>
+        </ul>
+        <p class="gps-note">ストア版はGPSの受信状況や端末環境により、距離と料金に誤差が生じます。認定された計量器ではありません。出発前に表示をご確認ください。</p>
+      </section>
+
+      <section id="webDemo" class="web-demo" aria-label="Web体験版">
+        <div class="demo-heading">
+          <div>
+            <p class="eyebrow">同じ料金エンジンを、その場で</p>
+            <h2>Web体験版</h2>
+          </div>
+          <span class="demo-version">DEMO 1.0.0</span>
+        </div>
+        <p class="demo-warning" role="note">操作体験用です。実運行には使用できません。</p>
+        <div id="demoMount">
+          <noscript>体験版を操作するにはJavaScriptを有効にしてください。</noscript>
+        </div>
+      </section>
+    </div>
+
+    <section id="workflow" class="workflow" aria-labelledby="workflowTitle">
+      <p class="eyebrow">一日の仕事が、一本につながる</p>
+      <h2 id="workflowTitle">計測 → 精算 → 一日を締める</h2>
+      <ol>
+        <li><span>計測</span><p>距離と低速時間を同じ画面で確認。待機・オプションもすぐ反映します。</p></li>
+        <li><span>精算</span><p>お預かり金額からお釣りを算出し、その場で領収証を確認できます。</p></li>
+        <li><span>締める</span><p>営業日と月の件数・売上を自動集計。記録は端末内に残ります。</p></li>
+      </ol>
+    </section>
+
+    <section class="privacy-band" aria-labelledby="privacyTitle">
+      <p class="eyebrow">現場のデータは、現場の端末に</p>
+      <h2 id="privacyTitle">送らない、追いかけない。</h2>
+      <p>位置、走行、売上、領収証を販売者のサーバーへ送信しません。広告やアクセス解析もありません。</p>
+    </section>
+
+    <section class="store-closing" aria-labelledby="closingTitle">
+      <img src="./assets/icon.svg" alt="じろちゃんずのカエルメーター" width="128" height="128">
+      <div>
+        <p class="eyebrow">正式版はストアで公開予定</p>
+        <h2 id="closingTitle">今日の運行を、きちんと締める。</h2>
+        <div class="store-nav store-nav--closing" aria-label="アプリストア">
+          <span class="store-badge store-badge--light" data-store="apple">App Store <strong>公開準備中</strong></span>
+          <span class="store-badge store-badge--light" data-store="google">Google Play <strong>公開準備中</strong></span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p><strong>Web体験版 v1.0.0</strong> ／ 実運行にはストア版をご利用ください</p>
+    <nav aria-label="法令・ポリシー">
+      <a href="./privacy.html">Web体験版プライバシー</a>
+      <a href="./terms.html">利用規約</a>
+      <a href="./privacy-policy.html">アプリプライバシーポリシー</a>
+      <a href="./tokushoho.html">特商法表記</a>
+    </nav>
+  </footer>
+
+  <script type="module" src="./site-config.js"></script>
+  <script type="module" src="./js/demo/demo-controller.js"></script>
 </body>
 </html>
