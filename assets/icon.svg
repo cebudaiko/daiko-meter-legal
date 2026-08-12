@@ -1,17 +1,29 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024" role="img" aria-label="じろちゃんず カエルメーター">
-  <rect width="1024" height="1024" fill="#163D6D"/>
-  <path d="M148 526c0-256 163-392 364-392s364 136 364 392v270H148z" fill="#FFF5C9"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 240 240" role="img" aria-label="じろちゃんず カエルメーター">
+  <rect width="240" height="240" fill="#163D6D"/>
   <g data-part="frog-face">
-    <circle cx="322" cy="366" r="126" fill="#79C94B" stroke="#163D6D" stroke-width="28"/>
-    <circle cx="702" cy="366" r="126" fill="#79C94B" stroke="#163D6D" stroke-width="28"/>
-    <path d="M252 450c0-128 116-222 260-222s260 94 260 222v184c0 144-116 260-260 260S252 778 252 634z" fill="#79C94B" stroke="#163D6D" stroke-width="28"/>
-    <circle cx="364" cy="366" r="38" fill="#FFF5C9" stroke="#163D6D" stroke-width="18"/>
-    <circle cx="660" cy="366" r="38" fill="#FFF5C9" stroke="#163D6D" stroke-width="18"/>
-    <circle cx="372" cy="374" r="14" fill="#163D6D"/>
-    <circle cx="652" cy="374" r="14" fill="#163D6D"/>
-    <path d="M406 700c64 52 148 52 212 0" fill="none" stroke="#163D6D" stroke-width="28" stroke-linecap="round"/>
+    <circle cx="79" cy="68" r="34" fill="#8BD450"/>
+    <circle cx="161" cy="68" r="34" fill="#8BD450"/>
+    <ellipse cx="120" cy="124" rx="76" ry="82" fill="#8BD450"/>
+    <circle cx="79" cy="68" r="18" fill="#FFF7CF"/>
+    <circle cx="161" cy="68" r="18" fill="#FFF7CF"/>
+    <circle cx="83" cy="72" r="9" fill="#163D6D"/>
+    <circle cx="157" cy="72" r="9" fill="#163D6D"/>
+    <circle cx="86" cy="68" r="3.5" fill="#FFFFFF"/>
+    <circle cx="160" cy="68" r="3.5" fill="#FFFFFF"/>
+    <g data-part="frog-cheeks" fill="#F59DA7">
+      <ellipse cx="75" cy="116" rx="14" ry="8"/>
+      <ellipse cx="165" cy="116" rx="14" ry="8"/>
+    </g>
+    <path data-part="frog-smile" d="M95 111c13 17 37 17 50 0" fill="none" stroke="#163D6D" stroke-width="7" stroke-linecap="round"/>
   </g>
-  <path data-part="meter-arc" d="M350 704a190 190 0 0 1 324 0" fill="none" stroke="#F97316" stroke-width="34" stroke-linecap="round"/>
-  <path d="M512 704l104-78" fill="none" stroke="#163D6D" stroke-width="24" stroke-linecap="round"/>
-  <circle cx="512" cy="704" r="30" fill="#F97316" stroke="#163D6D" stroke-width="14"/>
+  <circle cx="120" cy="171" r="43" fill="#FFF7CF" stroke="#163D6D" stroke-width="7"/>
+  <path data-part="meter-arc" d="M90 175a34 34 0 0 1 60 0" fill="none" stroke="#FF7A1A" stroke-width="8" stroke-linecap="round"/>
+  <path d="M120 175l21-16" stroke="#163D6D" stroke-width="6" stroke-linecap="round"/>
+  <circle cx="120" cy="175" r="7" fill="#FF7A1A" stroke="#163D6D" stroke-width="3"/>
+  <g data-part="frog-hands">
+    <path d="M58 151c13 5 21 15 27 29M182 151c-13 5-21 15-27 29" fill="none" stroke="#163D6D" stroke-width="22" stroke-linecap="round"/>
+    <path d="M58 151c13 5 21 15 27 29M182 151c-13 5-21 15-27 29" fill="none" stroke="#8BD450" stroke-width="14" stroke-linecap="round"/>
+    <circle cx="85" cy="180" r="9" fill="#8BD450" stroke="#163D6D" stroke-width="4"/>
+    <circle cx="155" cy="180" r="9" fill="#8BD450" stroke="#163D6D" stroke-width="4"/>
+  </g>
 </svg>
