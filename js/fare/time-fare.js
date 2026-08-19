@@ -1,4 +1,8 @@
 import { getCompanies } from './config.js';
+import {
+  DEFAULT_LOW_SPEED_THRESHOLD_KMH,
+  normalizeLowSpeedThresholdKmh,
+} from './low-speed-threshold.js';
 
 export function calcTimeFare(lowSpeedSec, companyId = 'company_a', isDaytime = false, config) {
   if (lowSpeedSec <= 0) return 0;
@@ -14,10 +18,17 @@ export function getTimeFareConfig(companyId = 'company_a', isDaytime = false, co
   const companies = config?.companies || getCompanies();
   const table = companies[companyId] || Object.values(companies)[0];
   const period = isDaytime ? 'day' : 'night';
-  return table?.[period]?.timeFare || table?.night?.timeFare || {
+  const timeFare = table?.[period]?.timeFare || table?.night?.timeFare || {
     enabled: false,
-    speedThresholdKmh: 10,
+    speedThresholdKmh: DEFAULT_LOW_SPEED_THRESHOLD_KMH,
     intervalSec: 90,
     feePerInterval: 100,
+  };
+  return {
+    ...timeFare,
+    speedThresholdKmh: normalizeLowSpeedThresholdKmh(
+      timeFare.speedThresholdKmh,
+      DEFAULT_LOW_SPEED_THRESHOLD_KMH,
+    ),
   };
 }

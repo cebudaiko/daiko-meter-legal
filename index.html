@@ -48,6 +48,37 @@
         <div id="demoMount">
           <noscript>体験版を操作するにはJavaScriptを有効にしてください。</noscript>
         </div>
+        <section class="web-rate-photo-import" aria-labelledby="ratePhotoTitle">
+          <div class="web-rate-photo-heading">
+            <div>
+              <p class="eyebrow">料金表の入力も、その場で</p>
+              <h3 id="ratePhotoTitle">写真から料金候補を読み取る</h3>
+            </div>
+            <span class="local-only-badge">端末内OCR</span>
+          </div>
+          <p class="rate-photo-help">料金表の写真は端末内で一時解析します。画像とOCR文字は送信・保存されません。Web体験版の結果はこのセッション中だけです。</p>
+          <p class="rate-photo-caution" role="note">OCRの認識は完全ではなく、正確さを保証しません。反映前にすべての金額を確認してください。</p>
+          <input id="ratePhotoFile" type="file" accept="image/jpeg,image/png,image/webp" capture="environment" hidden>
+          <label for="ratePhotoFile" id="ratePhotoTrigger" class="rate-photo-trigger" role="button" tabindex="0">料金表の写真を選ぶ</label>
+          <p id="ratePhotoStatus" class="rate-photo-status" role="status" aria-live="polite" aria-atomic="true"></p>
+          <progress id="ratePhotoProgress" class="rate-photo-progress" aria-label="OCR読み取り進捗" max="1" value="0" hidden>0%</progress>
+          <div class="rate-photo-actions rate-photo-cancel-actions">
+            <button type="button" id="ratePhotoCancel" class="demo-button" hidden>読み取りを取り消す</button>
+          </div>
+          <div id="ratePhotoReview" class="rate-photo-review" hidden>
+            <img id="ratePhotoPreview" class="rate-photo-preview" alt="選択した料金表のプレビュー">
+            <div id="ratePhotoFields" class="rate-photo-fields"></div>
+            <ul id="ratePhotoWarnings" class="rate-photo-warnings"></ul>
+            <div class="rate-photo-actions">
+              <button type="button" id="ratePhotoApply" class="demo-button demo-button--primary">今回のプレビューへ反映</button>
+            </div>
+          </div>
+          <section class="rate-memory" aria-labelledby="rateMemoryTitle">
+            <h4 id="rateMemoryTitle">今回だけの料金プレビュー</h4>
+            <div data-rate-memory-preview aria-live="polite">まだ料金候補を反映していません。</div>
+            <p>ページを再読み込みまたは閉じると、このプレビューは消去されます。ストア版の料金設定には保存されません。</p>
+          </section>
+        </section>
       </section>
     </div>
 
@@ -64,7 +95,7 @@
     <section class="privacy-band" aria-labelledby="privacyTitle">
       <p class="eyebrow">現場のデータは、現場の端末に</p>
       <h2 id="privacyTitle">送らない、追いかけない。</h2>
-      <p>位置、走行、売上、領収証を販売者のサーバーへ送信しません。広告やアクセス解析もありません。</p>
+      <p>位置、走行、売上、領収証、料金表画像、OCR文字を販売者のサーバーへ送信しません。広告やアクセス解析もありません。</p>
     </section>
 
     <section class="store-closing" aria-labelledby="closingTitle">

@@ -1,5 +1,10 @@
 import { operatingDayKey, normalizeOperatingDayCutoff } from '../history/operating-day.js';
 
+function nonNegativeIntegerYen(value) {
+  const number = Number(value);
+  return Number.isFinite(number) && number > 0 ? Math.trunc(number) : 0;
+}
+
 export function buildTripRecord(state, { companies, gpsResult, tenantCode, now = new Date() } = {}) {
   // Record the rate context actually charged (locked at trip start), not the live one.
   const usingLocked = state.lockedCompanyId != null;
@@ -33,6 +38,9 @@ export function buildTripRecord(state, { companies, gpsResult, tenantCode, now =
     durationMs: state.elapsedMs,
     waitMs: state.totalWaitMs,
     baseFare: state.baseFare,
+    daySurchargePercentFee: nonNegativeIntegerYen(state.daySurchargePercentFee),
+    daySurchargeFixedFee: nonNegativeIntegerYen(state.daySurchargeFixedFee),
+    daySurchargeFee: nonNegativeIntegerYen(state.daySurchargeFee),
     waitFee: state.waitFee,
     timeFee: state.timeFee,
     optionFee: state.optionFee,

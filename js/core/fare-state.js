@@ -7,6 +7,9 @@ export function recalcFareState(state) {
   if (state.mode === 'idle') {
     state.currentFare = 0;
     state.baseFare = 0;
+    state.daySurchargePercentFee = 0;
+    state.daySurchargeFixedFee = 0;
+    state.daySurchargeFee = 0;
     state.waitFee = 0;
     state.timeFee = 0;
     state.optionFee = 0;
@@ -29,6 +32,9 @@ export function recalcFareState(state) {
 
   state.currentFare = result.total;
   state.baseFare = result.baseFare;
+  state.daySurchargePercentFee = result.daySurchargePercentFee;
+  state.daySurchargeFixedFee = result.daySurchargeFixedFee;
+  state.daySurchargeFee = result.daySurchargeFee;
   state.waitFee = result.waitFee;
   state.timeFee = result.timeFee;
   state.optionFee = result.optionFee;

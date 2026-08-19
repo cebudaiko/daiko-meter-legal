@@ -48,6 +48,9 @@ export function createMeterState() {
 
     currentFare: 0,
     baseFare: 0,
+    daySurchargePercentFee: 0,
+    daySurchargeFixedFee: 0,
+    daySurchargeFee: 0,
     waitFee: 0,
     timeFee: 0,
     optionFee: 0,

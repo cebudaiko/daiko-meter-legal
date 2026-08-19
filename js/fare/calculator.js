@@ -1,5 +1,7 @@
 import { getCompanies, getConfig } from './config.js';
-import { calcBaseFare, getFareTableInfo, isDaytimeNow } from './base-fare.js';
+import {
+  calcBaseFare, calcDistanceFare, getFareTableInfo, isDaytimeNow,
+} from './base-fare.js';
 import { calcDriverReward } from './driver-reward.js';
 import { calcOptionFees } from './option-fare.js';
 import { calcTimeFare, getTimeFareConfig } from './time-fare.js';
@@ -7,6 +9,7 @@ import { calcWaitFee } from './wait-fare.js';
 
 export {
   calcBaseFare,
+  calcDistanceFare,
   calcDriverReward,
   calcOptionFees,
   calcTimeFare,
@@ -26,18 +29,23 @@ export function calcTotalFare(input = {}, config = getConfig()) {
     isSpecialPeriod = false,
     options = {},
   } = input;
-  const baseFare = calcBaseFare(distanceKm, companyId, isDaytime, isSpecialPeriod, config);
+  const distance = calcDistanceFare(
+    distanceKm, companyId, isDaytime, isSpecialPeriod, config,
+  );
   const waitFee = calcWaitFee(waitMinutes, config);
   const timeFee = calcTimeFare(lowSpeedSec, companyId, isDaytime, config);
   const optionFee = calcOptionFees(options, config);
-  const total = Math.max(0, baseFare + waitFee + timeFee + optionFee);
+  const total = Math.max(
+    0,
+    distance.baseFare + distance.daySurchargeFee + waitFee + timeFee + optionFee,
+  );
 
   const companies = config?.companies || getCompanies();
   const company = companies[companyId] || Object.values(companies)[0];
 
   return {
     total,
-    baseFare,
+    ...distance,
     waitFee,
     timeFee,
     optionFee,

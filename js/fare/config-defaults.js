@@ -1,3 +1,8 @@
+export { DEFAULT_LOW_SPEED_THRESHOLD_KMH } from './low-speed-threshold.js';
+import { DEFAULT_LOW_SPEED_THRESHOLD_KMH } from './low-speed-threshold.js';
+export { DEFAULT_DAY_PRICING } from './day-pricing.js';
+import { DEFAULT_DAY_PRICING } from './day-pricing.js';
+
 export const DEFAULT_TABLES = {
   company_a: {
     name: 'セブ代行',
@@ -12,7 +17,7 @@ export const DEFAULT_TABLES = {
       longDistanceBase: 8910,
       timeFare: {
         enabled: true,
-        speedThresholdKmh: 10,
+        speedThresholdKmh: DEFAULT_LOW_SPEED_THRESHOLD_KMH,
         intervalSec: 90,
         feePerInterval: 100,
       },
@@ -25,6 +30,7 @@ export const DEFAULT_TABLES = {
     },
     dayStart: 7,
     dayEnd: 18,
+    dayPricing: DEFAULT_DAY_PRICING,
   },
   company_b: {
     name: 'パリ代行',
@@ -36,7 +42,7 @@ export const DEFAULT_TABLES = {
       ],
       timeFare: {
         enabled: true,
-        speedThresholdKmh: 10,
+        speedThresholdKmh: DEFAULT_LOW_SPEED_THRESHOLD_KMH,
         intervalSec: 90,
         feePerInterval: 100,
       },
@@ -49,6 +55,7 @@ export const DEFAULT_TABLES = {
     },
     dayStart: 7,
     dayEnd: 18,
+    dayPricing: DEFAULT_DAY_PRICING,
   },
 };
 
