@@ -12,10 +12,14 @@ function csvNumber(value) {
   return Number.isFinite(number) ? number : 0;
 }
 
+function csvYen(value) {
+  return Math.max(0, Math.trunc(csvNumber(value)));
+}
+
 export function recordsToCsv(records) {
   const list = Array.isArray(records) ? records : [];
   // B2-6: 時間料金 included so the fee columns sum to 合計. B2-8: 特別 marks 特別期間 trips.
-  const header = '日時,会社,号車,距離(km),時間(分),待機(分),基本料金,待機料金,時間料金,オプション,合計,特別';
+  const header = '日時,会社,号車,距離(km),時間(分),待機(分),基本料金,待機料金,時間料金,日中率割増,日中固定加算,日中割増計,オプション,合計,特別';
   const rows = list.map((record) => {
     const d = new Date(record.date);
     const dateStr = Number.isNaN(d.getTime())
@@ -31,6 +35,9 @@ export function recordsToCsv(records) {
       csvNumber(record.baseFare),
       csvNumber(record.waitFee),
       csvNumber(record.timeFee),
+      csvYen(record.daySurchargePercentFee),
+      csvYen(record.daySurchargeFixedFee),
+      csvYen(record.daySurchargeFee),
       csvNumber(record.optionFee),
       csvNumber(record.totalFare),
       csvField(record.isSpecialPeriod ? '○' : ''),

@@ -1,4 +1,5 @@
 import { defaultConfig } from '../storage/local-config.js';
+import { DEFAULT_LOW_SPEED_THRESHOLD_KMH } from '../fare/low-speed-threshold.js';
 import { calculateChange } from '../settlement/change.js';
 import {
   CALCULATOR_KEYS,
@@ -8,8 +9,13 @@ import {
 } from '../settlement/calculator.js';
 import { advanceDemo, createDemoState, restoreDemoState } from './demo-state.js';
 import { clearDemoState, loadDemoState, saveDemoState } from './demo-storage.js';
+import { mountRatePhotoView } from '../rate-import/rate-photo-view.js';
 
 export const DEMO_CALCULATOR_KEYS = CALCULATOR_KEYS;
+
+const RATE_PREVIEW_FIELDS = new Set([
+  'companyName', 'nightRows', 'dayRows', 'timeFare', 'waitFare', 'dayHours',
+]);
 
 export function restoreDemoTransitionFocus(root, previousStatus, nextStatus) {
   let selector = null;
@@ -41,7 +47,7 @@ function createDemoConfig() {
           ...company.night,
           timeFare: {
             enabled: true,
-            speedThresholdKmh: 10,
+            speedThresholdKmh: DEFAULT_LOW_SPEED_THRESHOLD_KMH,
             intervalSec: 30,
             feePerInterval: 100,
           },
@@ -53,6 +59,60 @@ function createDemoConfig() {
 
 function yen(value) {
   return `${Math.max(0, Number(value) || 0).toLocaleString('ja-JP')}円`;
+}
+
+function previewRow(documentRoot, label, value) {
+  const row = documentRoot.createElement('p');
+  const term = documentRoot.createElement('strong');
+  const description = documentRoot.createElement('span');
+  term.textContent = label;
+  description.textContent = value;
+  row.append(term, description);
+  return row;
+}
+
+function tierPreview(rows = []) {
+  return rows.map((row) => (
+    row.kind === 'perKm'
+      ? `以降1kmごと ${yen(row.amount)}`
+      : `${Number(row.upToKm)}kmまで ${yen(row.amount)}`
+  )).join(' ／ ');
+}
+
+export function renderSessionRatePreview(root, candidate, acceptedFields) {
+  if (!root) return null;
+  const accepted = new Set(
+    (Array.isArray(acceptedFields) ? acceptedFields : [])
+      .filter((field) => RATE_PREVIEW_FIELDS.has(field)),
+  );
+  const values = candidate?.values || {};
+  const documentRoot = root.ownerDocument || document;
+  const rows = [];
+  if (accepted.has('companyName')) rows.push(previewRow(documentRoot, '会社名', values.companyName || '未入力'));
+  if (accepted.has('nightRows')) rows.push(previewRow(documentRoot, '夜間料金', tierPreview(values.nightRows)));
+  if (accepted.has('dayRows')) rows.push(previewRow(documentRoot, '日中料金', tierPreview(values.dayRows)));
+  if (accepted.has('timeFare')) {
+    const fare = values.timeFare || {};
+    rows.push(previewRow(
+      documentRoot,
+      '低速時間料金',
+      `${Number(fare.speedThresholdKmh)}km/h以下 ${Number(fare.intervalSec)}秒ごと ${yen(fare.feePerInterval)}`,
+    ));
+  }
+  if (accepted.has('waitFare')) {
+    const fare = values.waitFare || {};
+    rows.push(previewRow(
+      documentRoot,
+      '待機料金',
+      `待機 ${Number(fare.initialMinutes)}分まで ${yen(fare.initialFee)} ／ 以降${Number(fare.additionalInterval)}分ごと ${yen(fare.additionalFee)}`,
+    ));
+  }
+  if (accepted.has('dayHours')) {
+    rows.push(previewRow(documentRoot, '日中時間', `${Number(values.dayHours?.start)}時〜${Number(values.dayHours?.end)}時`));
+  }
+  root.replaceChildren(...rows);
+  if (!rows.length) root.textContent = '反映する候補が選ばれていません。';
+  return Object.fromEntries([...accepted].map((field) => [field, values[field]]));
 }
 
 function restoredState(storage, config) {
@@ -247,5 +307,15 @@ if (typeof document !== 'undefined') {
   createDemoController({
     root: document.querySelector('#demoMount'),
     storage: globalThis.localStorage,
+  });
+  mountRatePhotoView({
+    root: document,
+    onApply(candidate, acceptedFields) {
+      renderSessionRatePreview(
+        document.querySelector('[data-rate-memory-preview]'),
+        candidate,
+        acceptedFields,
+      );
+    },
   });
 }

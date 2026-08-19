@@ -1,0 +1,17 @@
+NPM wrapper metadata:
+Package: @tesseract.js-data/jpn@1.0.0
+Declared license identifier: MIT
+Package URL: https://www.npmjs.com/package/@tesseract.js-data/jpn/v/1.0.0
+Repository metadata: https://github.com/naptha/tessdata.git
+
+Trained-data payload:
+File: 4.0.0_best_int/jpn.traineddata.gz
+License identifier: Apache-2.0
+Upstream commit: 806cd9adc8c6e8abc11c782db1818c990576bebc
+Model source: https://raw.githubusercontent.com/naptha/tessdata/806cd9adc8c6e8abc11c782db1818c990576bebc/4.0.0_best_int/jpn.traineddata.gz
+License source: https://raw.githubusercontent.com/naptha/tessdata/806cd9adc8c6e8abc11c782db1818c990576bebc/LICENSE
+Model SHA-256: 2b63ebfbf1484de4a08ce53b29ef98a1c17658a93cbd38acb665d7d316d0be88
+License SHA-256: c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4
+Bundled license: licenses/jpn-traineddata-Apache-2.0-LICENSE.txt
+
+Notice: The npm wrapper declares MIT metadata but bundles no license text; the Japanese trained-data payload is distributed under the pinned upstream Apache-2.0 license above.

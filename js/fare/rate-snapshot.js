@@ -2,11 +2,16 @@ import {
   getCompanies, getOptionConfig, getSpecialPeriodConfig, getWaitParams,
 } from './config.js';
 import { calcTotalFare } from './calculator.js';
+import { normalizeDayPricing } from './day-pricing.js';
 import { sanitizeConfig } from '../storage/local-config.js';
+import {
+  DEFAULT_LOW_SPEED_THRESHOLD_KMH,
+  normalizeLowSpeedThresholdKmh,
+} from './low-speed-threshold.js';
 
 const DEFAULT_TIME_FARE = Object.freeze({
   enabled: false,
-  speedThresholdKmh: 10,
+  speedThresholdKmh: DEFAULT_LOW_SPEED_THRESHOLD_KMH,
   intervalSec: 90,
   feePerInterval: 100,
 });
@@ -30,7 +35,10 @@ function cloneTimeFare(value) {
   const rule = value || DEFAULT_TIME_FARE;
   return {
     enabled: !!rule.enabled,
-    speedThresholdKmh: Math.max(0, finiteNumber(rule.speedThresholdKmh, 10)),
+    speedThresholdKmh: normalizeLowSpeedThresholdKmh(
+      rule.speedThresholdKmh,
+      DEFAULT_LOW_SPEED_THRESHOLD_KMH,
+    ),
     intervalSec: Math.max(1, finiteNumber(rule.intervalSec, 90)),
     feePerInterval: Math.max(0, finiteNumber(rule.feePerInterval)),
   };
@@ -67,9 +75,18 @@ export function createFareSnapshot(config, rateContext = {}) {
   const company = companies[companyId] || Object.values(companies)[0] || {};
   const isDaytime = !!rateContext.isDaytime;
   const isSpecialPeriod = !!rateContext.isSpecialPeriod;
+  const policy = normalizeDayPricing(company.dayPricing);
+  const dayPricing = {
+    applied: isDaytime && !isSpecialPeriod && policy.mode === 'nightSurcharge',
+    surchargePercent: policy.surchargePercent,
+    fixedSurchargeYen: policy.fixedSurchargeYen,
+  };
   const selectedBand = isSpecialPeriod
     ? safeConfig.specialPeriod
-    : ((isDaytime ? company.day : company.night) || company.night || company.day || {});
+    : ((dayPricing.applied ? company.night : (isDaytime ? company.day : company.night))
+      || company.night
+      || company.day
+      || {});
   const timeFare = (isDaytime ? company.day?.timeFare : company.night?.timeFare)
     || company.night?.timeFare
     || DEFAULT_TIME_FARE;
@@ -90,6 +107,7 @@ export function createFareSnapshot(config, rateContext = {}) {
         ? null
         : finiteNumber(selectedBand.longDistanceBase),
     },
+    dayPricing,
     timeFare: cloneTimeFare(timeFare),
     waitParams: {
       initialMinutes: finiteNumber(wait?.initialMinutes),
@@ -143,6 +161,25 @@ export function sanitizeFareSnapshot(snapshot) {
     isDaytime: !!context.isDaytime,
     isSpecialPeriod: !!context.isSpecialPeriod,
   };
+  const sourceDayPricing = source.dayPricing
+    && typeof source.dayPricing === 'object'
+    && !Array.isArray(source.dayPricing)
+    ? source.dayPricing
+    : null;
+  const normalizedDayPricing = sourceDayPricing
+    ? normalizeDayPricing({
+      mode: 'nightSurcharge',
+      surchargePercent: sourceDayPricing.surchargePercent,
+      fixedSurchargeYen: sourceDayPricing.fixedSurchargeYen,
+    })
+    : normalizeDayPricing();
+  const dayPricing = {
+    applied: sourceDayPricing?.applied === true
+      && rateContext.isDaytime
+      && !rateContext.isSpecialPeriod,
+    surchargePercent: normalizedDayPricing.surchargePercent,
+    fixedSurchargeYen: normalizedDayPricing.fixedSurchargeYen,
+  };
   const internalCompanyId = 'persisted_snapshot';
   const safe = createFareSnapshot({
     companies: {
@@ -166,6 +203,7 @@ export function sanitizeFareSnapshot(snapshot) {
     ...safe,
     company: companyIdentity,
     rateContext,
+    dayPricing,
     specialPeriod: { selected: rateContext.isSpecialPeriod },
   }));
 }
@@ -193,6 +231,11 @@ export function calcTotalFareFromSnapshot(input = {}, snapshot) {
         shortName: company.shortName || company.name || companyId,
         night: { ...selectedBand, timeFare: cloneTimeFare(safeSnapshot.timeFare) },
         day: { ...selectedBand, timeFare: cloneTimeFare(safeSnapshot.timeFare) },
+        dayPricing: {
+          mode: safeSnapshot.dayPricing?.applied ? 'nightSurcharge' : 'table',
+          surchargePercent: safeSnapshot.dayPricing?.surchargePercent,
+          fixedSurchargeYen: safeSnapshot.dayPricing?.fixedSurchargeYen,
+        },
       },
     },
     waitParams: { ...(safeSnapshot.waitParams || safeSnapshot.wait) },

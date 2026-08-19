@@ -1,6 +1,9 @@
+import { DEFAULT_OPTIONS, DEFAULT_SPECIAL, DEFAULT_WAIT } from '../fare/config-defaults.js';
+import { DEFAULT_DAY_PRICING, normalizeDayPricing } from '../fare/day-pricing.js';
 import {
-  DEFAULT_OPTIONS, DEFAULT_SPECIAL, DEFAULT_WAIT,
-} from '../fare/config-defaults.js';
+  DEFAULT_LOW_SPEED_THRESHOLD_KMH,
+  normalizeLowSpeedThresholdKmh,
+} from '../fare/low-speed-threshold.js';
 import { normalizeOperatingDayCutoff } from '../history/operating-day.js';
 
 const KEY = 'meter_local_config';
@@ -19,7 +22,12 @@ export function defaultConfig() {
             { upToKm: 2, flatFare: 2000 },
             { upToKm: null, perKm: 350 },
           ],
-          timeFare: { enabled: false, speedThresholdKmh: 10, intervalSec: 90, feePerInterval: 100 },
+          timeFare: {
+            enabled: false,
+            speedThresholdKmh: DEFAULT_LOW_SPEED_THRESHOLD_KMH,
+            intervalSec: 90,
+            feePerInterval: 100,
+          },
         },
         day: {
           tiers: [
@@ -29,6 +37,7 @@ export function defaultConfig() {
         },
         dayStart: 7,
         dayEnd: 18,
+        dayPricing: DEFAULT_DAY_PRICING,
       },
     },
     options: DEFAULT_OPTIONS,
@@ -116,12 +125,15 @@ function sanitizeBand(band, fallbackBand) {
   }
   if (b.timeFare && typeof b.timeFare === 'object') {
     const fallbackTimeFare = fallbackBand.timeFare || {
-      speedThresholdKmh: 10, intervalSec: 90, feePerInterval: 100,
+      speedThresholdKmh: DEFAULT_LOW_SPEED_THRESHOLD_KMH,
+      intervalSec: 90,
+      feePerInterval: 100,
     };
     out.timeFare = {
       enabled: !!b.timeFare.enabled,
-      speedThresholdKmh: nonNegative(
-        b.timeFare.speedThresholdKmh, fallbackTimeFare.speedThresholdKmh,
+      speedThresholdKmh: normalizeLowSpeedThresholdKmh(
+        b.timeFare.speedThresholdKmh,
+        fallbackTimeFare.speedThresholdKmh,
       ),
       intervalSec: positive(b.timeFare.intervalSec, fallbackTimeFare.intervalSec),
       feePerInterval: nonNegative(b.timeFare.feePerInterval, fallbackTimeFare.feePerInterval),
@@ -146,9 +158,15 @@ export function sanitizeConfig(config) {
       day: sanitizeBand(comp.day, defCompany.day),
       dayStart: nonNegative(comp.dayStart, 7),
       dayEnd: nonNegative(comp.dayEnd, 18),
+      dayPricing: normalizeDayPricing(comp.dayPricing),
     };
   }
-  if (!Object.keys(companies).length) companies.my_company = defCompany;
+  if (!Object.keys(companies).length) {
+    companies.my_company = {
+      ...defCompany,
+      dayPricing: normalizeDayPricing(defCompany.dayPricing),
+    };
+  }
 
   const w = c.waitParams && typeof c.waitParams === 'object' ? c.waitParams : {};
   const o = c.options && typeof c.options === 'object' ? c.options : {};

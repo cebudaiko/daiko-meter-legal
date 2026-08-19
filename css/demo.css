@@ -135,11 +135,94 @@
 .sales-summary span { color: var(--muted); display: block; font-size: .68rem; }
 .sales-summary strong { color: var(--night-navy); font-family: var(--font-meter); }
 
+.web-rate-photo-import {
+  background: #EAF3E5;
+  border: 1px solid #A9C89A;
+  border-radius: 1rem;
+  display: grid;
+  gap: .85rem;
+  min-width: 0;
+  padding: 1rem;
+}
+.web-rate-photo-heading { align-items: start; display: flex; gap: 1rem; justify-content: space-between; }
+.web-rate-photo-heading .eyebrow { color: var(--quiet-green); margin-bottom: .25rem; }
+.web-rate-photo-heading h3 { color: var(--night-navy); font-size: 1.15rem; line-height: 1.35; margin: 0; }
+.local-only-badge {
+  background: var(--night-navy);
+  border-radius: 999px;
+  color: var(--white);
+  flex: 0 0 auto;
+  font-size: .68rem;
+  font-weight: 800;
+  padding: .3rem .65rem;
+}
+.rate-photo-help, .rate-photo-caution, .rate-photo-status { font-size: .78rem; margin: 0; overflow-wrap: anywhere; }
+.rate-photo-caution { background: var(--meter-cream); border-left: 4px solid var(--fare-amber); padding: .65rem .75rem; }
+.rate-photo-status { color: var(--night-navy); font-weight: 800; min-height: 1.75rem; }
+.rate-photo-trigger {
+  align-items: center;
+  background: var(--night-navy);
+  border: 2px solid var(--night-navy);
+  border-radius: .75rem;
+  color: var(--white);
+  cursor: pointer;
+  display: inline-flex;
+  font-weight: 800;
+  justify-content: center;
+  min-height: var(--touch-target);
+  padding: .55rem .85rem;
+  text-align: center;
+  width: 100%;
+}
+.rate-photo-progress { accent-color: var(--quiet-green); height: .8rem; width: 100%; }
+.rate-photo-review { display: grid; gap: .85rem; min-width: 0; }
+.rate-photo-review[hidden], .rate-photo-cancel-actions [hidden] { display: none; }
+.rate-photo-preview {
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: .65rem;
+  max-height: 20rem;
+  object-fit: contain;
+  width: 100%;
+}
+.rate-photo-fields { display: grid; gap: .75rem; min-width: 0; }
+.rate-photo-field { background: var(--white); border: 1px solid var(--line); border-radius: .75rem; min-width: 0; padding: .75rem; }
+.rate-photo-field-heading { align-items: start; display: flex; flex-wrap: wrap; gap: .5rem; justify-content: space-between; }
+.rate-photo-field-choice { align-items: center; display: inline-flex; gap: .5rem; min-height: 2.75rem; }
+.rate-photo-field-choice input { height: 1.35rem; width: 1.35rem; }
+.rate-photo-confidence { color: var(--muted); font-size: .72rem; }
+.rate-photo-source { color: var(--muted); font-size: .7rem; margin: .35rem 0; overflow-wrap: anywhere; white-space: pre-wrap; }
+.rate-photo-tier-list, .rate-photo-input-grid { display: grid; gap: .6rem; min-width: 0; }
+.rate-photo-tier-row { border-top: 1px solid var(--line); display: grid; gap: .55rem; min-width: 0; padding-top: .65rem; }
+.rate-photo-input-label { color: var(--muted); display: grid; font-size: .7rem; gap: .2rem; min-width: 0; }
+.rate-photo-input-label > input[type="checkbox"] { justify-self: start; }
+.setting-input {
+  background: var(--white);
+  border: 1px solid #8293A8;
+  border-radius: .5rem;
+  color: var(--ink);
+  min-height: 44px;
+  min-width: 0;
+  padding: .45rem .55rem;
+  width: 100%;
+}
+.rate-photo-warnings { color: #7A2E06; font-size: .76rem; margin: 0; padding-left: 1.25rem; }
+.rate-photo-actions { display: flex; flex-wrap: wrap; gap: .55rem; }
+.rate-photo-actions .demo-button { flex: 1 1 13rem; min-height: var(--touch-target); }
+.rate-memory { background: var(--white); border: 1px dashed #79926C; border-radius: .75rem; padding: .8rem; }
+.rate-memory h4 { color: var(--night-navy); margin: 0 0 .45rem; }
+.rate-memory p { color: var(--muted); font-size: .7rem; margin: .45rem 0 0; }
+.rate-memory [data-rate-memory-preview] { display: grid; gap: .35rem; overflow-wrap: anywhere; }
+.rate-memory [data-rate-memory-preview] p { color: var(--ink); display: grid; gap: .1rem; margin: 0; }
+.rate-memory [data-rate-memory-preview] strong { color: var(--quiet-green); }
+
 @media (min-width: 48rem) {
   .demo-actions { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .demo-button--reset { grid-column: 1 / -1; }
   .settlement-experience { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .demo-panel--wide { grid-column: 1 / -1; }
+  .rate-photo-tier-row { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .rate-photo-input-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 @media (min-width: 80rem) {
