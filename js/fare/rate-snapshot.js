@@ -3,6 +3,7 @@ import {
 } from './config.js';
 import { calcTotalFare } from './calculator.js';
 import { normalizeDayPricing } from './day-pricing.js';
+import { normalizeWinterPricing } from './winter-pricing.js';
 import { sanitizeConfig } from '../storage/local-config.js';
 import {
   DEFAULT_LOW_SPEED_THRESHOLD_KMH,
@@ -75,11 +76,18 @@ export function createFareSnapshot(config, rateContext = {}) {
   const company = companies[companyId] || Object.values(companies)[0] || {};
   const isDaytime = !!rateContext.isDaytime;
   const isSpecialPeriod = !!rateContext.isSpecialPeriod;
+  const isWinter = !!rateContext.isWinter;
   const policy = normalizeDayPricing(company.dayPricing);
   const dayPricing = {
     applied: isDaytime && !isSpecialPeriod && policy.mode === 'nightSurcharge',
     surchargePercent: policy.surchargePercent,
     fixedSurchargeYen: policy.fixedSurchargeYen,
+  };
+  const winterPolicy = normalizeWinterPricing(company.winterPricing);
+  const winterPricing = {
+    applied: isWinter,
+    surchargePercent: winterPolicy.surchargePercent,
+    fixedSurchargeYen: winterPolicy.fixedSurchargeYen,
   };
   const selectedBand = isSpecialPeriod
     ? safeConfig.specialPeriod
@@ -100,7 +108,9 @@ export function createFareSnapshot(config, rateContext = {}) {
       name: String(company.name || companyId),
       shortName: String(company.shortName || company.name || companyId),
     },
-    rateContext: { companyId, isDaytime, isSpecialPeriod },
+    rateContext: {
+      companyId, isDaytime, isSpecialPeriod, isWinter,
+    },
     distanceFare: {
       tiers: cloneTiers(selectedBand?.tiers),
       longDistanceBase: selectedBand?.longDistanceBase === undefined
@@ -108,6 +118,7 @@ export function createFareSnapshot(config, rateContext = {}) {
         : finiteNumber(selectedBand.longDistanceBase),
     },
     dayPricing,
+    winterPricing,
     timeFare: cloneTimeFare(timeFare),
     waitParams: {
       initialMinutes: finiteNumber(wait?.initialMinutes),
@@ -160,6 +171,7 @@ export function sanitizeFareSnapshot(snapshot) {
     companyId,
     isDaytime: !!context.isDaytime,
     isSpecialPeriod: !!context.isSpecialPeriod,
+    isWinter: !!context.isWinter,
   };
   const sourceDayPricing = source.dayPricing
     && typeof source.dayPricing === 'object'
@@ -179,6 +191,17 @@ export function sanitizeFareSnapshot(snapshot) {
       && !rateContext.isSpecialPeriod,
     surchargePercent: normalizedDayPricing.surchargePercent,
     fixedSurchargeYen: normalizedDayPricing.fixedSurchargeYen,
+  };
+  const sourceWinterPricing = source.winterPricing
+    && typeof source.winterPricing === 'object'
+    && !Array.isArray(source.winterPricing)
+    ? source.winterPricing
+    : null;
+  const normalizedWinterPricing = normalizeWinterPricing(sourceWinterPricing || undefined);
+  const winterPricing = {
+    applied: sourceWinterPricing?.applied === true && rateContext.isWinter,
+    surchargePercent: normalizedWinterPricing.surchargePercent,
+    fixedSurchargeYen: normalizedWinterPricing.fixedSurchargeYen,
   };
   const internalCompanyId = 'persisted_snapshot';
   const safe = createFareSnapshot({
@@ -204,6 +227,7 @@ export function sanitizeFareSnapshot(snapshot) {
     company: companyIdentity,
     rateContext,
     dayPricing,
+    winterPricing,
     specialPeriod: { selected: rateContext.isSpecialPeriod },
   }));
 }
@@ -236,6 +260,10 @@ export function calcTotalFareFromSnapshot(input = {}, snapshot) {
           surchargePercent: safeSnapshot.dayPricing?.surchargePercent,
           fixedSurchargeYen: safeSnapshot.dayPricing?.fixedSurchargeYen,
         },
+        winterPricing: {
+          surchargePercent: safeSnapshot.winterPricing?.surchargePercent,
+          fixedSurchargeYen: safeSnapshot.winterPricing?.fixedSurchargeYen,
+        },
       },
     },
     waitParams: { ...(safeSnapshot.waitParams || safeSnapshot.wait) },
@@ -248,7 +276,9 @@ export function calcTotalFareFromSnapshot(input = {}, snapshot) {
     isDaytime: !!context.isDaytime,
     // The selected distance table is already locked, including special period.
     isSpecialPeriod: false,
+    isWinter: safeSnapshot.winterPricing?.applied === true,
   }, snapshotConfig);
   result.breakdown.isSpecialPeriod = !!context.isSpecialPeriod;
+  result.breakdown.isWinter = !!context.isWinter;
   return result;
 }

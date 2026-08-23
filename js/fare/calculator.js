@@ -27,17 +27,19 @@ export function calcTotalFare(input = {}, config = getConfig()) {
     companyId = 'company_a',
     isDaytime = false,
     isSpecialPeriod = false,
+    isWinter = false,
     options = {},
   } = input;
   const distance = calcDistanceFare(
-    distanceKm, companyId, isDaytime, isSpecialPeriod, config,
+    distanceKm, companyId, isDaytime, isSpecialPeriod, config, isWinter,
   );
   const waitFee = calcWaitFee(waitMinutes, config);
   const timeFee = calcTimeFare(lowSpeedSec, companyId, isDaytime, config);
   const optionFee = calcOptionFees(options, config);
   const total = Math.max(
     0,
-    distance.baseFare + distance.daySurchargeFee + waitFee + timeFee + optionFee,
+    distance.baseFare + distance.daySurchargeFee + distance.winterSurchargeFee
+      + waitFee + timeFee + optionFee,
   );
 
   const companies = config?.companies || getCompanies();
@@ -54,6 +56,7 @@ export function calcTotalFare(input = {}, config = getConfig()) {
       companyName: company?.name || companyId,
       isDaytime,
       isSpecialPeriod,
+      isWinter,
       distanceKm: Math.round(distanceKm * 10) / 10,
       waitMinutes: Math.round(waitMinutes),
       lowSpeedSec: Math.round(lowSpeedSec),

@@ -1,5 +1,6 @@
 import { DEFAULT_OPTIONS, DEFAULT_SPECIAL, DEFAULT_WAIT } from '../fare/config-defaults.js';
 import { DEFAULT_DAY_PRICING, normalizeDayPricing } from '../fare/day-pricing.js';
+import { DEFAULT_WINTER_PRICING, normalizeWinterPricing } from '../fare/winter-pricing.js';
 import {
   DEFAULT_LOW_SPEED_THRESHOLD_KMH,
   normalizeLowSpeedThresholdKmh,
@@ -38,6 +39,7 @@ export function defaultConfig() {
         dayStart: 7,
         dayEnd: 18,
         dayPricing: DEFAULT_DAY_PRICING,
+        winterPricing: DEFAULT_WINTER_PRICING,
       },
     },
     options: DEFAULT_OPTIONS,
@@ -159,12 +161,14 @@ export function sanitizeConfig(config) {
       dayStart: nonNegative(comp.dayStart, 7),
       dayEnd: nonNegative(comp.dayEnd, 18),
       dayPricing: normalizeDayPricing(comp.dayPricing),
+      winterPricing: normalizeWinterPricing(comp.winterPricing),
     };
   }
   if (!Object.keys(companies).length) {
     companies.my_company = {
       ...defCompany,
       dayPricing: normalizeDayPricing(defCompany.dayPricing),
+      winterPricing: normalizeWinterPricing(defCompany.winterPricing),
     };
   }
 

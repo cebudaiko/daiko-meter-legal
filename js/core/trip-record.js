@@ -13,6 +13,7 @@ export function buildTripRecord(state, { companies, gpsResult, tenantCode, now =
   // B2-8: record the special-period flag actually charged so a 特別期間 trip stays
   // distinguishable in history/CSV (FC-3 gap).
   const isSpecialPeriod = usingLocked ? !!state.lockedIsSpecialPeriod : !!state.isSpecialPeriod;
+  const isWinter = usingLocked ? !!state.lockedIsWinter : !!state.isWinter;
   const company = companies?.find((item) => item.id === companyId) || companies?.[0];
   const snapshotCompany = state.lockedFareSnapshot?.company;
   const startedAt = state.startedAt || new Date(state.startTime ?? now).toISOString();
@@ -33,6 +34,7 @@ export function buildTripRecord(state, { companies, gpsResult, tenantCode, now =
     companyName: snapshotCompany?.shortName || company?.shortName || companyId,
     isDaytime,
     isSpecialPeriod,
+    isWinter,
     carNumber: state.carNumber,
     distanceKm: state.distanceKm,
     durationMs: state.elapsedMs,
@@ -41,6 +43,9 @@ export function buildTripRecord(state, { companies, gpsResult, tenantCode, now =
     daySurchargePercentFee: nonNegativeIntegerYen(state.daySurchargePercentFee),
     daySurchargeFixedFee: nonNegativeIntegerYen(state.daySurchargeFixedFee),
     daySurchargeFee: nonNegativeIntegerYen(state.daySurchargeFee),
+    winterSurchargePercentFee: nonNegativeIntegerYen(state.winterSurchargePercentFee),
+    winterSurchargeFixedFee: nonNegativeIntegerYen(state.winterSurchargeFixedFee),
+    winterSurchargeFee: nonNegativeIntegerYen(state.winterSurchargeFee),
     waitFee: state.waitFee,
     timeFee: state.timeFee,
     optionFee: state.optionFee,

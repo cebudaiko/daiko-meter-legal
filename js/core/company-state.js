@@ -16,6 +16,10 @@ export function toggleSpecialPeriodState(state) {
   state.isSpecialPeriod = !state.isSpecialPeriod;
 }
 
+export function toggleWinterState(state) {
+  state.isWinter = !state.isWinter;
+}
+
 export function autoDetectDaytimeState(state) {
   state.isDaytime = isDaytimeNow(state.companyId);
 }

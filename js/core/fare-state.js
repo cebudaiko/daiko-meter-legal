@@ -10,6 +10,9 @@ export function recalcFareState(state) {
     state.daySurchargePercentFee = 0;
     state.daySurchargeFixedFee = 0;
     state.daySurchargeFee = 0;
+    state.winterSurchargePercentFee = 0;
+    state.winterSurchargeFixedFee = 0;
+    state.winterSurchargeFee = 0;
     state.waitFee = 0;
     state.timeFee = 0;
     state.optionFee = 0;
@@ -24,6 +27,7 @@ export function recalcFareState(state) {
     companyId: rate.companyId,
     isDaytime: rate.isDaytime,
     isSpecialPeriod: rate.isSpecialPeriod,
+    isWinter: rate.isWinter,
     options: state.options,
   };
   const result = state.lockedFareSnapshot
@@ -35,6 +39,9 @@ export function recalcFareState(state) {
   state.daySurchargePercentFee = result.daySurchargePercentFee;
   state.daySurchargeFixedFee = result.daySurchargeFixedFee;
   state.daySurchargeFee = result.daySurchargeFee;
+  state.winterSurchargePercentFee = result.winterSurchargePercentFee;
+  state.winterSurchargeFixedFee = result.winterSurchargeFixedFee;
+  state.winterSurchargeFee = result.winterSurchargeFee;
   state.waitFee = result.waitFee;
   state.timeFee = result.timeFee;
   state.optionFee = result.optionFee;

@@ -23,11 +23,13 @@ export function createMeterState() {
     companyId: 'company_a',
     isDaytime: false,
     isSpecialPeriod: false,
+    isWinter: false,
     // rate context locked at 実車開始 — an auto day/night flip or a company switch
     // must never retroactively re-rate an in-progress trip (FC-1/FC-2/MR-1/MR-2).
     lockedCompanyId: null,
     lockedIsDaytime: false,
     lockedIsSpecialPeriod: false,
+    lockedIsWinter: false,
     lockedOperatingDayCutoff: '14:00',
     lockedFareSnapshot: null,
     carNumber: '',
@@ -51,6 +53,9 @@ export function createMeterState() {
     daySurchargePercentFee: 0,
     daySurchargeFixedFee: 0,
     daySurchargeFee: 0,
+    winterSurchargePercentFee: 0,
+    winterSurchargeFixedFee: 0,
+    winterSurchargeFee: 0,
     waitFee: 0,
     timeFee: 0,
     optionFee: 0,
@@ -77,11 +82,13 @@ export function resetTripForStart(state, carNumber, now = Date.now(), config = g
   state.lockedCompanyId = state.companyId;
   state.lockedIsDaytime = state.isDaytime;
   state.lockedIsSpecialPeriod = state.isSpecialPeriod;
+  state.lockedIsWinter = !!state.isWinter;
   state.lockedOperatingDayCutoff = normalizeOperatingDayCutoff(config?.operatingDayCutoff);
   state.lockedFareSnapshot = createFareSnapshot(config, {
     companyId: state.lockedCompanyId,
     isDaytime: state.lockedIsDaytime,
     isSpecialPeriod: state.lockedIsSpecialPeriod,
+    isWinter: state.lockedIsWinter,
   });
   state.startedAt = new Date(now).toISOString();
   state.endedAt = '';
@@ -108,11 +115,13 @@ export function activeRateContext(state) {
       companyId: state.lockedCompanyId,
       isDaytime: state.lockedIsDaytime,
       isSpecialPeriod: state.lockedIsSpecialPeriod,
+      isWinter: !!state.lockedIsWinter,
     };
   }
   return {
     companyId: state.companyId,
     isDaytime: state.isDaytime,
     isSpecialPeriod: state.isSpecialPeriod,
+    isWinter: !!state.isWinter,
   };
 }

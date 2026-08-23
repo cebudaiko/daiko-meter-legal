@@ -2,6 +2,8 @@ export { DEFAULT_LOW_SPEED_THRESHOLD_KMH } from './low-speed-threshold.js';
 import { DEFAULT_LOW_SPEED_THRESHOLD_KMH } from './low-speed-threshold.js';
 export { DEFAULT_DAY_PRICING } from './day-pricing.js';
 import { DEFAULT_DAY_PRICING } from './day-pricing.js';
+export { DEFAULT_WINTER_PRICING } from './winter-pricing.js';
+import { DEFAULT_WINTER_PRICING } from './winter-pricing.js';
 
 export const DEFAULT_TABLES = {
   company_a: {
@@ -31,6 +33,7 @@ export const DEFAULT_TABLES = {
     dayStart: 7,
     dayEnd: 18,
     dayPricing: DEFAULT_DAY_PRICING,
+    winterPricing: DEFAULT_WINTER_PRICING,
   },
   company_b: {
     name: 'パリ代行',
@@ -56,6 +59,7 @@ export const DEFAULT_TABLES = {
     dayStart: 7,
     dayEnd: 18,
     dayPricing: DEFAULT_DAY_PRICING,
+    winterPricing: DEFAULT_WINTER_PRICING,
   },
 };
 

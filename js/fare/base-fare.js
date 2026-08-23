@@ -1,5 +1,6 @@
 import { getCompanies, getSpecialPeriodConfig } from './config.js';
 import { calculateDaySurcharge, normalizeDayPricing } from './day-pricing.js';
+import { calculateWinterSurcharge, normalizeWinterPricing } from './winter-pricing.js';
 import { calcFromTiers } from './tier-calculator.js';
 
 export function calcDistanceFare(
@@ -8,6 +9,7 @@ export function calcDistanceFare(
   isDaytime = false,
   isSpecialPeriod = false,
   config,
+  isWinter = false,
 ) {
   const km = Math.max(0, distanceKm);
   const companies = config?.companies || getCompanies();
@@ -34,11 +36,19 @@ export function calcDistanceFare(
   const surcharge = appliesDaySurcharge
     ? calculateDaySurcharge(baseFare, policy)
     : { percentFee: 0, fixedFee: 0, total: 0 };
+  // The winter (snow-road) surcharge follows the driver's per-trip flag, not the
+  // calendar or the selected band, so it also applies during the special period.
+  const winterSurcharge = isWinter
+    ? calculateWinterSurcharge(baseFare, normalizeWinterPricing(company.winterPricing))
+    : { percentFee: 0, fixedFee: 0, total: 0 };
   return {
     baseFare,
     daySurchargePercentFee: surcharge.percentFee,
     daySurchargeFixedFee: surcharge.fixedFee,
     daySurchargeFee: surcharge.total,
+    winterSurchargePercentFee: winterSurcharge.percentFee,
+    winterSurchargeFixedFee: winterSurcharge.fixedFee,
+    winterSurchargeFee: winterSurcharge.total,
   };
 }
 
@@ -48,11 +58,12 @@ export function calcBaseFare(
   isDaytime = false,
   isSpecialPeriod = false,
   config,
+  isWinter = false,
 ) {
   const distance = calcDistanceFare(
-    distanceKm, companyId, isDaytime, isSpecialPeriod, config,
+    distanceKm, companyId, isDaytime, isSpecialPeriod, config, isWinter,
   );
-  return distance.baseFare + distance.daySurchargeFee;
+  return distance.baseFare + distance.daySurchargeFee + distance.winterSurchargeFee;
 }
 
 export function isDaytimeNow(companyId = 'company_a', date = new Date()) {
