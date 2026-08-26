@@ -1,4 +1,4 @@
-import { loadLocalConfig } from '../storage/local-config.js';
+import { APP_DISPLAY_NAME, loadLocalConfig } from '../storage/local-config.js';
 export { DEFAULT_OPTIONS, DEFAULT_SPECIAL, DEFAULT_TABLES, DEFAULT_WAIT } from './config-defaults.js';
 import { DEFAULT_OPTIONS, DEFAULT_SPECIAL, DEFAULT_TABLES, DEFAULT_WAIT } from './config-defaults.js';
 import { normalizeTiers } from './config-normalizer.js';
@@ -23,6 +23,10 @@ export function getWaitParams() {
   return config?.waitParams || DEFAULT_WAIT;
 }
 
+export function getWaitPricing() {
+  return config?.waitPricing || null;
+}
+
 export function getSpecialPeriodConfig() {
   return config?.specialPeriod || DEFAULT_SPECIAL;
 }
@@ -40,7 +44,7 @@ export function getCarList() {
 }
 
 export function getAppName() {
-  return config?.appName || 'じろちゃんず';
+  return APP_DISPLAY_NAME;
 }
 
 export function getOptionConfig() {

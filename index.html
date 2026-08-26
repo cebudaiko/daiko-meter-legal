@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="距離料金と低速時間料金を同じ計算エンジンで試せる、買い切り型メーターアプリ『じろちゃんず』のWeb体験版。">
-  <title>じろちゃんず｜走った距離も、止まった時間も。</title>
+  <meta name="description" content="距離料金と低速時間料金を同じ計算エンジンで試せる、買い切り型メーターアプリ『じろちゃん』のWeb体験版。">
+  <title>じろちゃん｜走った距離も、止まった時間も。</title>
   <link rel="icon" href="./assets/icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./css/site.css">
   <link rel="stylesheet" href="./css/demo.css">
@@ -12,9 +12,9 @@
 <body>
   <a class="skip-link" href="#webDemo">Web体験版へ移動</a>
   <header class="site-header">
-    <a class="brand" href="#hero" aria-label="じろちゃんず ホーム">
+    <a class="brand" href="#hero" aria-label="じろちゃん ホーム">
       <img src="./assets/icon.svg" alt="" width="48" height="48">
-      <span>じろちゃんず</span>
+      <span>じろちゃん</span>
     </a>
     <nav class="store-nav" aria-label="アプリストア">
       <span class="store-badge" data-store="apple">App Store <strong>公開準備中</strong></span>
@@ -58,7 +58,7 @@
           </div>
           <p class="rate-photo-help">料金表の写真は端末内で一時解析します。画像とOCR文字は送信・保存されません。Web体験版の結果はこのセッション中だけです。</p>
           <p class="rate-photo-caution" role="note">OCRの認識は完全ではなく、正確さを保証しません。反映前にすべての金額を確認してください。</p>
-          <input id="ratePhotoFile" type="file" accept="image/jpeg,image/png,image/webp" capture="environment" hidden>
+          <input id="ratePhotoFile" type="file" accept="image/*" capture="environment" hidden>
           <label for="ratePhotoFile" id="ratePhotoTrigger" class="rate-photo-trigger" role="button" tabindex="0">料金表の写真を選ぶ</label>
           <p id="ratePhotoStatus" class="rate-photo-status" role="status" aria-live="polite" aria-atomic="true"></p>
           <progress id="ratePhotoProgress" class="rate-photo-progress" aria-label="OCR読み取り進捗" max="1" value="0" hidden>0%</progress>
@@ -99,7 +99,7 @@
     </section>
 
     <section class="store-closing" aria-labelledby="closingTitle">
-      <img src="./assets/icon.svg" alt="じろちゃんずのカエルメーター" width="128" height="128">
+      <img src="./assets/icon.svg" alt="じろちゃんのカエルメーター" width="128" height="128">
       <div>
         <p class="eyebrow">正式版はストアで公開予定</p>
         <h2 id="closingTitle">今日の運行を、きちんと締める。</h2>

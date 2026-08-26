@@ -154,7 +154,7 @@ function copyIssuer(issuer) {
   ].filter(([, value]) => value));
 }
 
-function optionDetails(record) {
+export function buildOptionDetails(record) {
   const selected = record?.options && typeof record.options === 'object' ? record.options : {};
   const stored = record?.fareSnapshot?.options && typeof record.fareSnapshot.options === 'object'
     ? record.fareSnapshot.options
@@ -164,6 +164,8 @@ function optionDetails(record) {
     ['overtime', 'overtimeFee', '時間外'],
     ['cancellation', 'cancellationFee', 'キャンセル'],
     ['insurance', 'insuranceFee', '保険'],
+    ['snowRemoval', 'snowRemovalFee', '雪かき'],
+    ['chainService', 'chainServiceFee', 'チェーン脱着'],
   ];
   for (const [selectedKey, amountKey, label] of booleanOptions) {
     if (selected[selectedKey]) details.push({ label, amount: integerYen(stored[amountKey]) });
@@ -207,6 +209,6 @@ export function buildReceiptModel(record = {}, { issuer = {}, addressee, issuedA
     timeFee: integerYen(record.timeFee),
     waitFee: integerYen(record.waitFee),
     optionFee: integerYen(record.optionFee, { allowNegative: true }),
-    optionDetails: optionDetails(record),
+    optionDetails: buildOptionDetails(record),
   };
 }

@@ -5,9 +5,27 @@ export function monotonicNow() {
 }
 
 export function finalizeWaitIfNeeded(state, now = Date.now()) {
-  if (!state.waitStartTime) return;
+  if (state.waitStartTime == null) return;
   state.totalWaitMs += Math.max(0, now - state.waitStartTime);
   state.waitStartTime = null;
+}
+
+export function beginPreTripWait(state, now = Date.now(), nowMono = monotonicNow()) {
+  if (state.mode !== 'running' || state.waitStartTime != null) return false;
+  state.preTripWaiting = true;
+  state.mode = 'waiting';
+  state.waitStartTime = now;
+  state.lastLowSpeedTickTs = nowMono;
+  return true;
+}
+
+export function beginDrivingFromPreTripWait(state, now = Date.now(), nowMono = monotonicNow()) {
+  if (state.mode !== 'waiting' || state.preTripWaiting !== true) return false;
+  finalizeWaitIfNeeded(state, now);
+  state.preTripWaiting = false;
+  state.mode = 'running';
+  state.lastLowSpeedTickTs = nowMono;
+  return true;
 }
 
 export function toggleWaitState(state, now = Date.now(), nowMono = monotonicNow()) {

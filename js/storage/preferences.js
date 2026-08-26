@@ -1,5 +1,9 @@
 const SETTINGS_KEY = 'daiko-meter-settings';
 
+export function normalizeKeepScreenAwakeDuringTrip(value) {
+  return value !== false;
+}
+
 export function normalizeReceiptIssuer(value = {}) {
   const source = value && typeof value === 'object' ? value : {};
   return {

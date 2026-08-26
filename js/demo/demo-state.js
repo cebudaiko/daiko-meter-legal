@@ -217,7 +217,7 @@ function settleDemo(state, action, config) {
     records,
     changeOptions: buildChangeOptions(state.totalFare),
     receipt: buildReceiptModel(record, {
-      issuer: { name: 'じろちゃんず Web体験版' },
+      issuer: { name: 'じろちゃん Web体験版' },
       issuedAt: now,
     }),
     history: buildHistoryModel(records, {
@@ -273,7 +273,7 @@ export function restoreDemoState(stored, config) {
     ...restored,
     changeOptions: buildChangeOptions(restored.totalFare),
     receipt: buildReceiptModel(record, {
-      issuer: { name: 'じろちゃんず Web体験版' },
+      issuer: { name: 'じろちゃん Web体験版' },
       issuedAt: new Date(record.endedAt),
     }),
     history: historyForRecords(records, config),
