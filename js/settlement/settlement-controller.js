@@ -109,11 +109,18 @@ export function createSettlementController({ root = document, onReceipt, onClose
     record = null;
     onClose?.(closingRecord);
     focusTarget?.focus?.();
+    return closingRecord;
+  }
+
+  function finish() {
+    if (!record) return;
+    const closingRecord = close();
+    if (closingRecord) onReceipt?.(closingRecord);
   }
 
   tendered?.addEventListener('input', renderTender);
   receipt?.addEventListener('click', () => { if (record) onReceipt?.(record); });
-  closeButton?.addEventListener('click', close);
+  closeButton?.addEventListener('click', finish);
 
   return { open, close, isOpen: () => Boolean(record && screen && !screen.hidden) };
 }

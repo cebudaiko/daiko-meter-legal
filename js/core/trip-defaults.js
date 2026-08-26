@@ -7,6 +7,8 @@ export function createDefaultOptions() {
     overtime: false,
     insurance: false,
     cancellation: false,
+    snowRemoval: false,
+    chainService: false,
     remoteFee: 0,
     surcharge: 0,
     pickupFee: 0,
@@ -42,6 +44,7 @@ export function createMeterState() {
 
     waitStartTime: null,
     totalWaitMs: 0,
+    preTripWaiting: false,
 
     gpsTracker: null,
     distanceKm: 0,
@@ -95,6 +98,7 @@ export function resetTripForStart(state, carNumber, now = Date.now(), config = g
   state.elapsedMs = 0;
   state.totalWaitMs = 0;
   state.waitStartTime = null;
+  state.preTripWaiting = false;
   state.distanceKm = 0;
   state.currentSpeed = 0;
   state.carNumber = carNumber;

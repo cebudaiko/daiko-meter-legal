@@ -67,6 +67,8 @@ export const DEFAULT_OPTIONS = {
   overtimeFee: 500,
   cancellationFee: 1000,
   insuranceFee: 500,
+  snowRemovalFee: 0,
+  chainServiceFee: 0,
 };
 
 export const DEFAULT_WAIT = {
@@ -75,6 +77,15 @@ export const DEFAULT_WAIT = {
   additionalInterval: 5,
   additionalFee: 500,
 };
+
+export const DEFAULT_STAGED_WAIT_PRICING = Object.freeze({
+  version: 1,
+  mode: 'staged',
+  stages: Object.freeze([
+    Object.freeze({ endMinutes: 1, intervalMinutes: 1, amountYen: 0 }),
+    Object.freeze({ endMinutes: null, intervalMinutes: 1, amountYen: 100 }),
+  ]),
+});
 
 export const DEFAULT_SPECIAL = {
   tiers: [

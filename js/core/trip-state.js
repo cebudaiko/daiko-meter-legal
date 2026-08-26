@@ -4,6 +4,8 @@ export {
 export {
   accrueLowSpeedFromFix,
   accrueLowSpeedFromTick,
+  beginDrivingFromPreTripWait,
+  beginPreTripWait,
   finalizeWaitIfNeeded,
   formatDuration,
   getTotalWaitMinutes,

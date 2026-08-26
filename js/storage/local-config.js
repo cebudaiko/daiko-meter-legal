@@ -5,12 +5,14 @@ import {
   DEFAULT_LOW_SPEED_THRESHOLD_KMH,
   normalizeLowSpeedThresholdKmh,
 } from '../fare/low-speed-threshold.js';
+import { validateWaitPricing } from '../fare/wait-pricing.js';
 import { normalizeOperatingDayCutoff } from '../history/operating-day.js';
 
 const KEY = 'meter_local_config';
-const LEGACY_APP_NAME = ['DAIKO', 'METER'].join(' ');
+export const APP_DISPLAY_NAME = 'じろちゃん';
+let lastLocalConfigWarnings = [];
 
-// Generic sample for a fresh install (the buyer renames + edits it in Settings).
+// Generic sample for a fresh install (the buyer renames the company + edits its rates in Settings).
 // NOT the seller's real businesses.
 export function defaultConfig() {
   return {
@@ -23,8 +25,12 @@ export function defaultConfig() {
             { upToKm: 2, flatFare: 2000 },
             { upToKm: null, perKm: 350 },
           ],
+          // Enabled on a fresh install: a 代行 meter that ships with the low-speed
+          // rule off silently never charges waiting time, which reads as "時間料金
+          // がオンにならない" and undercharges every trip until the buyer finds the
+          // setting. The buyer can still turn it off in Settings.
           timeFare: {
-            enabled: false,
+            enabled: true,
             speedThresholdKmh: DEFAULT_LOW_SPEED_THRESHOLD_KMH,
             intervalSec: 90,
             feePerInterval: 100,
@@ -46,7 +52,7 @@ export function defaultConfig() {
     waitParams: DEFAULT_WAIT,
     specialPeriod: DEFAULT_SPECIAL,
     cars: ['1号車', '2号車', '3号車'],
-    appName: 'じろちゃんず',
+    appName: APP_DISPLAY_NAME,
     operatingDayCutoff: '14:00',
   };
 }
@@ -144,7 +150,7 @@ function sanitizeBand(band, fallbackBand) {
   return out;
 }
 
-export function sanitizeConfig(config) {
+export function sanitizeConfig(config, { warnings = [] } = {}) {
   const def = defaultConfig();
   const defCompany = Object.values(def.companies)[0];
   const c = config && typeof config === 'object' ? config : {};
@@ -174,13 +180,15 @@ export function sanitizeConfig(config) {
 
   const w = c.waitParams && typeof c.waitParams === 'object' ? c.waitParams : {};
   const o = c.options && typeof c.options === 'object' ? c.options : {};
-  return {
+  const sanitized = {
     companies,
     specialPeriod: sanitizeBand(c.specialPeriod, def.specialPeriod),
     options: {
       overtimeFee: nonNegative(o.overtimeFee, def.options.overtimeFee),
       cancellationFee: nonNegative(o.cancellationFee, def.options.cancellationFee),
       insuranceFee: nonNegative(o.insuranceFee, def.options.insuranceFee),
+      snowRemovalFee: nonNegative(o.snowRemovalFee, def.options.snowRemovalFee),
+      chainServiceFee: nonNegative(o.chainServiceFee, def.options.chainServiceFee),
     },
     waitParams: {
       initialMinutes: nonNegative(w.initialMinutes, def.waitParams.initialMinutes),
@@ -189,18 +197,32 @@ export function sanitizeConfig(config) {
       additionalFee: nonNegative(w.additionalFee, def.waitParams.additionalFee),
     },
     cars: Array.isArray(c.cars) && c.cars.length ? c.cars.map(String) : def.cars,
-    appName: c.appName === LEGACY_APP_NAME
-      ? 'じろちゃんず'
-      : (typeof c.appName === 'string' && c.appName.trim() ? c.appName : def.appName),
+    appName: APP_DISPLAY_NAME,
     operatingDayCutoff: normalizeOperatingDayCutoff(c.operatingDayCutoff, def.operatingDayCutoff),
   };
+
+  if (Object.hasOwn(c, 'waitPricing')) {
+    const result = validateWaitPricing(c.waitPricing);
+    if (result.ok) sanitized.waitPricing = result.pricing;
+    else warnings.push('invalid_wait_pricing');
+  }
+
+  return sanitized;
+}
+
+export function getLocalConfigWarnings() {
+  return [...lastLocalConfigWarnings];
 }
 
 export function loadLocalConfig() {
+  const warnings = [];
   try {
     const raw = localStorage.getItem(KEY);
-    return sanitizeConfig(raw ? JSON.parse(raw) : null);
+    const result = sanitizeConfig(raw ? JSON.parse(raw) : null, { warnings });
+    lastLocalConfigWarnings = warnings;
+    return result;
   } catch {
+    lastLocalConfigWarnings = warnings;
     return defaultConfig();
   }
 }

@@ -237,6 +237,10 @@ export function mountRatePhotoView({
     await controller.cancel();
     elements.trigger.focus();
   });
+  elements.trigger.addEventListener('click', (event) => {
+    event.preventDefault();
+    elements.file.click();
+  });
   elements.trigger.addEventListener('keydown', (event) => {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();

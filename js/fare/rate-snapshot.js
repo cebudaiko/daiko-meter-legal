@@ -4,6 +4,7 @@ import {
 import { calcTotalFare } from './calculator.js';
 import { normalizeDayPricing } from './day-pricing.js';
 import { normalizeWinterPricing } from './winter-pricing.js';
+import { validateWaitPricing } from './wait-pricing.js';
 import { sanitizeConfig } from '../storage/local-config.js';
 import {
   DEFAULT_LOW_SPEED_THRESHOLD_KMH,
@@ -100,8 +101,9 @@ export function createFareSnapshot(config, rateContext = {}) {
     || DEFAULT_TIME_FARE;
   const wait = safeConfig.waitParams;
   const options = safeConfig.options;
+  const waitPricingResult = validateWaitPricing(safeConfig.waitPricing);
 
-  return trustSnapshot(deepFreeze({
+  const snapshot = {
     version: 1,
     company: {
       id: companyId,
@@ -130,6 +132,8 @@ export function createFareSnapshot(config, rateContext = {}) {
       overtimeFee: finiteNumber(options?.overtimeFee),
       cancellationFee: finiteNumber(options?.cancellationFee),
       insuranceFee: finiteNumber(options?.insuranceFee),
+      snowRemovalFee: finiteNumber(options?.snowRemovalFee),
+      chainServiceFee: finiteNumber(options?.chainServiceFee),
     },
     specialPeriod: { selected: isSpecialPeriod },
     rounding: {
@@ -138,7 +142,9 @@ export function createFareSnapshot(config, rateContext = {}) {
       lowSpeedSecDecimals: 0,
       minimumTotal: 0,
     },
-  }));
+  };
+  if (waitPricingResult.ok) snapshot.waitPricing = waitPricingResult.pricing;
+  return trustSnapshot(deepFreeze(snapshot));
 }
 
 // Persisted snapshots are data, not trusted executable configuration. Rebuild the
@@ -204,7 +210,7 @@ export function sanitizeFareSnapshot(snapshot) {
     fixedSurchargeYen: normalizedWinterPricing.fixedSurchargeYen,
   };
   const internalCompanyId = 'persisted_snapshot';
-  const safe = createFareSnapshot({
+  const snapshotConfig = {
     companies: {
       [internalCompanyId]: {
         name: companyIdentity.name,
@@ -216,7 +222,9 @@ export function sanitizeFareSnapshot(snapshot) {
     waitParams: source.waitParams || source.wait || {},
     options: source.options || {},
     specialPeriod: lockedBand,
-  }, {
+  };
+  if (Object.hasOwn(source, 'waitPricing')) snapshotConfig.waitPricing = source.waitPricing;
+  const safe = createFareSnapshot(snapshotConfig, {
     companyId: internalCompanyId,
     isDaytime: rateContext.isDaytime,
     isSpecialPeriod: rateContext.isSpecialPeriod,
@@ -267,6 +275,7 @@ export function calcTotalFareFromSnapshot(input = {}, snapshot) {
       },
     },
     waitParams: { ...(safeSnapshot.waitParams || safeSnapshot.wait) },
+    ...(safeSnapshot.waitPricing ? { waitPricing: safeSnapshot.waitPricing } : {}),
     options: { ...safeSnapshot.options },
     specialPeriod: { tiers: cloneTiers(safeSnapshot.distanceFare?.tiers) },
   };
