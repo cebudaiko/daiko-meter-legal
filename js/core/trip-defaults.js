@@ -26,8 +26,9 @@ export function createMeterState() {
     isDaytime: false,
     isSpecialPeriod: false,
     isWinter: false,
-    // rate context locked at 実車開始 — an auto day/night flip or a company switch
-    // must never retroactively re-rate an in-progress trip (FC-1/FC-2/MR-1/MR-2).
+    // Rate context is locked at 実車開始. Automatic day/night changes cannot re-rate
+    // a trip; the explicit confirmed TOP company switch is the sole snapshot-replacement
+    // path and deliberately recalculates the current session from its start boundary.
     lockedCompanyId: null,
     lockedIsDaytime: false,
     lockedIsSpecialPeriod: false,
