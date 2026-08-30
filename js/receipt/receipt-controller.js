@@ -20,6 +20,21 @@ function sharePayload(model) {
   };
 }
 
+function defaultShare() {
+  const capacitor = globalThis.Capacitor;
+  try {
+    if (capacitor?.isNativePlatform?.()) {
+      const nativeShare = capacitor.Plugins?.Share?.share;
+      if (typeof nativeShare === 'function') {
+        return nativeShare.bind(capacitor.Plugins.Share);
+      }
+    }
+  } catch {
+    // Fall through to the browser share path when the native bridge is unavailable.
+  }
+  return globalThis.navigator?.share?.bind(globalThis.navigator);
+}
+
 export function createReceiptController({
   root = document,
   lookupRecord = () => null,
@@ -38,7 +53,7 @@ export function createReceiptController({
   const closeButton = root.querySelector?.('#receiptClose');
   const status = root.querySelector?.('#receiptStatus');
   const memory = new Map();
-  const shareFn = share === undefined ? globalThis.navigator?.share?.bind(globalThis.navigator) : share;
+  const shareFn = share === undefined ? defaultShare() : share;
   let currentRecord = null;
   let currentModel = null;
 
