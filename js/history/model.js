@@ -28,6 +28,12 @@ export function migrateRecord(record, { fallbackCutoff = '14:00' } = {}) {
   // one-time migration on every load for a malformed legacy entry.
   const legacyDate = source.date ?? null;
 
+  // Completed trips only need the number of accepted GPS samples. Older
+  // versions stored every point, which could make a few records consume MBs.
+  if (Array.isArray(source.gpsPoints)) {
+    migrated.gpsPoints = source.gpsPoints.length;
+    changed = true;
+  }
   if (!Object.hasOwn(source, 'startedAt')) {
     migrated.startedAt = legacyDate;
     changed = true;

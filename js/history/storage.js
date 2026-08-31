@@ -72,11 +72,11 @@ function migrateAndPersist(records, fallbackCutoff) {
       console.error('[history] 旧履歴の移行保存に失敗しました:', error);
       lastLoadStatus = { migrationFailed: true };
       return records.map((source, index) => {
-        const migratedDay = migrated[index]?.operatingDay;
+        const migratedRecord = migrated[index];
+        const migratedDay = migratedRecord?.operatingDay;
         const durableDay = source && typeof source === 'object' ? source.operatingDay : undefined;
-        if (durableDay === migratedDay) return source;
-        const record = source && typeof source === 'object' ? source : { legacyValue: source };
-        return { ...record, operatingDay: UNCLASSIFIED_OPERATING_DAY };
+        if (durableDay === migratedDay) return migratedRecord;
+        return { ...migratedRecord, operatingDay: UNCLASSIFIED_OPERATING_DAY };
       });
     }
   }
