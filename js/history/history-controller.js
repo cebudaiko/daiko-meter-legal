@@ -1,6 +1,6 @@
 import { getConfig } from '../fare.js';
 import { deleteRecord, getHistoryCapacity, loadRecords } from '../history.js';
-import { renderHistoryView } from '../ui/history-view.js';
+import { HISTORY_RENDER_BATCH_SIZE, renderHistoryView } from '../ui/history-view.js';
 import { recordsToCsv } from './csv.js';
 import { deliverDailyCsv } from './csv-delivery.js';
 import { buildHistoryModel } from './model.js';
@@ -34,17 +34,26 @@ export function createHistoryController({
 } = {}) {
   let selectedDay = '';
   let model = null;
+  let capacity = null;
+  let visibleLimit = HISTORY_RENDER_BATCH_SIZE;
+
+  function renderCurrent() {
+    if (!model) return null;
+    renderView(els, model, capacity, { visibleLimit });
+    return model;
+  }
 
   function render() {
     const records = loadRecordsFn({ fallbackCutoff: cutoff() });
     model = buildHistoryModel(records, { selectedDay, now: now(), cutoff: cutoff() });
     selectedDay = model.selectedDay;
-    renderView(els, model, { ...getCapacityFn(records), ...getStorageStatusFn() });
-    return model;
+    capacity = { ...getCapacityFn(records), ...getStorageStatusFn() };
+    return renderCurrent();
   }
 
   function selectDay(day) {
     selectedDay = day;
+    visibleLimit = HISTORY_RENDER_BATCH_SIZE;
     return render();
   }
 
@@ -80,6 +89,12 @@ export function createHistoryController({
     if (day) selectDay(day);
   });
   els?.historyList?.addEventListener?.('click', (event) => {
+    const loadMore = event?.target?.closest?.('[data-history-load-more]');
+    if (loadMore && model) {
+      visibleLimit += HISTORY_RENDER_BATCH_SIZE;
+      renderCurrent();
+      return;
+    }
     const id = closestData(event, '.history-item-delete', 'data-record-id');
     if (id && confirmDelete()) {
       deleteRecordFn(id);
