@@ -2,7 +2,6 @@ import { getCompanies, getConfig } from './config.js';
 import {
   calcBaseFare, calcDistanceFare, getFareTableInfo, isDaytimeNow,
 } from './base-fare.js';
-import { calcDriverReward } from './driver-reward.js';
 import { calcOptionFees } from './option-fare.js';
 import { calcTimeFare, getTimeFareConfig } from './time-fare.js';
 import { calcWaitFee } from './wait-fare.js';
@@ -10,7 +9,6 @@ import { calcWaitFee } from './wait-fare.js';
 export {
   calcBaseFare,
   calcDistanceFare,
-  calcDriverReward,
   calcOptionFees,
   calcTimeFare,
   calcWaitFee,

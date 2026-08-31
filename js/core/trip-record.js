@@ -1,4 +1,5 @@
 import { operatingDayKey, normalizeOperatingDayCutoff } from '../history/operating-day.js';
+import { createRewardAssignments } from '../rewards/assignments.js';
 
 function nonNegativeIntegerYen(value) {
   const number = Number(value);
@@ -50,6 +51,7 @@ export function buildTripRecord(state, { companies, gpsResult, tenantCode, now =
     timeFee: state.timeFee,
     optionFee: state.optionFee,
     totalFare: state.currentFare,
+    rewardAssignments: createRewardAssignments(state.lockedRewardAssignments),
     options: { ...state.options },
     gpsPoints: gpsResult?.pointCount ?? gpsResult?.points?.length ?? 0,
     companyCode: tenantCode,

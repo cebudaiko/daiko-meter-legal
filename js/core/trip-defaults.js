@@ -1,6 +1,9 @@
 import { getConfig } from '../fare/config.js';
 import { createFareSnapshot } from '../fare/rate-snapshot.js';
 import { normalizeOperatingDayCutoff } from '../history/operating-day.js';
+import { createRewardAssignments } from '../rewards/assignments.js';
+
+const EMPTY_REWARD_ASSIGNMENTS = Object.freeze([]);
 
 export function createDefaultOptions() {
   return {
@@ -35,6 +38,9 @@ export function createMeterState() {
     lockedIsWinter: false,
     lockedOperatingDayCutoff: '14:00',
     lockedFareSnapshot: null,
+    activeAttendances: [],
+    activeRewardProfileIds: new Set(),
+    lockedRewardAssignments: EMPTY_REWARD_ASSIGNMENTS,
     carNumber: '',
 
     startTime: null,
@@ -94,6 +100,7 @@ export function resetTripForStart(state, carNumber, now = Date.now(), config = g
     isSpecialPeriod: state.lockedIsSpecialPeriod,
     isWinter: state.lockedIsWinter,
   });
+  state.lockedRewardAssignments = createRewardAssignments(state.activeAttendances);
   state.startedAt = new Date(now).toISOString();
   state.endedAt = '';
   state.elapsedMs = 0;
