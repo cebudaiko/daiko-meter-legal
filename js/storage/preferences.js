@@ -1,5 +1,10 @@
 const SETTINGS_KEY = 'daiko-meter-settings';
 
+import {
+  normalizeReportTaxRatePercent,
+  normalizeRewardProfiles,
+} from '../rewards/profile.js';
+
 export function normalizeKeepScreenAwakeDuringTrip(value) {
   return value !== false;
 }
@@ -17,7 +22,13 @@ export function normalizeReceiptIssuer(value = {}) {
 
 export function loadSettingsData() {
   try {
-    return JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}');
+    const parsed = JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}');
+    const data = parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : {};
+    return {
+      ...data,
+      rewardProfiles: normalizeRewardProfiles(data.rewardProfiles),
+      reportTaxRatePercent: normalizeReportTaxRatePercent(data.reportTaxRatePercent),
+    };
   } catch {
     return {};
   }
