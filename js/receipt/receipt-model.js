@@ -3,6 +3,7 @@ const MAX_YEN = Number.MAX_SAFE_INTEGER;
 const FNV64_OFFSET = 14695981039346656037n;
 const FNV64_PRIME = 1099511628211n;
 const FNV64_MASK = (1n << 64n) - 1n;
+const ROUTE_LABEL_MAX_CODE_POINTS = 160;
 
 function fnv1a64(value) {
   let hash = FNV64_OFFSET;
@@ -42,6 +43,15 @@ function integerYen(value, { allowNegative = false } = {}) {
 
 function text(value) {
   return typeof value === 'string' ? value.trim() : '';
+}
+
+function routeText(origin, destination) {
+  const normalizedOrigin = text(origin);
+  const normalizedDestination = text(destination);
+  if (!normalizedOrigin || !normalizedDestination) return '';
+  if ([...normalizedOrigin].length > ROUTE_LABEL_MAX_CODE_POINTS
+    || [...normalizedDestination].length > ROUTE_LABEL_MAX_CODE_POINTS) return '';
+  return `${normalizedOrigin} → ${normalizedDestination}`;
 }
 
 function canonicalize(value) {
@@ -198,6 +208,7 @@ export function buildReceiptModel(record = {}, { issuer = {}, addressee, issuedA
     note: text(issuer?.defaultNote),
     companyName: text(record.companyName || record.company),
     carNumber: text(record.carNumber),
+    routeText: routeText(record.routeOrigin, record.routeDestination),
     totalFare: integerYen(record.totalFare),
     baseFare: integerYen(record.baseFare),
     daySurchargePercentFee: integerYen(record.daySurchargePercentFee),

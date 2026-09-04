@@ -114,8 +114,7 @@ export function createSettlementController({ root = document, onReceipt, onClose
 
   function finish() {
     if (!record) return;
-    const closingRecord = close();
-    if (closingRecord) onReceipt?.(closingRecord);
+    close();
   }
 
   tendered?.addEventListener('input', renderTender);

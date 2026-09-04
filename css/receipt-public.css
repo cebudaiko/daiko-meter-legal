@@ -1,0 +1,71 @@
+:root {
+  --receipt-ink: #172033;
+  --receipt-paper: #fff;
+  --receipt-road: #1d4ed8;
+  --receipt-rule: #cbd5e1;
+  --receipt-canvas: #eef2f7;
+  color: var(--receipt-ink);
+  background: var(--receipt-canvas);
+  font-family: "Noto Sans JP", "Yu Gothic", sans-serif;
+}
+
+* { box-sizing: border-box; }
+body { min-width: 0; margin: 0; background: var(--receipt-canvas); }
+button { font: inherit; }
+.receipt-public-shell { width: min(100%, 720px); margin: 0 auto; padding: clamp(16px, 4vw, 32px); }
+.receipt-public-header { margin-bottom: 14px; }
+.receipt-public-header p { margin: 0; color: #526078; font-size: 13px; }
+.receipt-public-header h1 { margin: 4px 0; font: 700 clamp(26px, 6vw, 38px)/1.15 "Yu Mincho", "Hiragino Mincho ProN", serif; }
+.receipt-public-tools { display: grid; gap: 10px; margin-bottom: 16px; padding: 14px; border: 1px solid var(--receipt-rule); border-radius: 12px; background: var(--receipt-paper); }
+.receipt-public-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.receipt-public-actions button { min-height: 44px; border: 1px solid var(--receipt-road); border-radius: 8px; background: var(--receipt-paper); color: var(--receipt-road); font-weight: 700; }
+.receipt-public-actions button:first-child { background: var(--receipt-road); color: #fff; }
+.receipt-public-actions button:disabled { opacity: .55; }
+.receipt-public-actions button:focus-visible { outline: 3px solid rgb(29 78 216 / 35%); outline-offset: 2px; }
+#receiptPublicStatus { min-height: 1.4em; margin: 0; color: #526078; font-size: 13px; }
+.receipt-document { width: 100%; padding: clamp(24px, 7vw, 56px); border-top: 5px solid var(--receipt-road); background: var(--receipt-paper); box-shadow: 0 18px 60px rgb(23 32 51 / 13%); overflow-wrap: anywhere; }
+.receipt-document-header, .receipt-document-footer { display: flex; justify-content: space-between; gap: 20px; align-items: flex-start; }
+.receipt-kicker { margin: 0 0 4px; color: #526078; font: 700 10px/1.2 ui-monospace, monospace; letter-spacing: .12em; }
+.receipt-document h1 { margin: 0; font: 700 clamp(30px, 8vw, 42px)/1.1 "Yu Mincho", "Hiragino Mincho ProN", serif; letter-spacing: .14em; }
+.receipt-issued-date { margin: 4px 0 0; white-space: nowrap; font-size: 12px; }
+.receipt-total { display: flex; align-items: baseline; gap: 10px; margin: 28px 0 12px; padding: 18px 0; border-block: 2px solid var(--receipt-ink); }
+.receipt-total span { font-size: 13px; }
+.receipt-total strong { margin-left: auto; font: 700 clamp(30px, 9vw, 46px)/1 ui-monospace, monospace; letter-spacing: -.04em; font-variant-numeric: tabular-nums; }
+.receipt-total small { font-size: 11px; }
+.receipt-note { margin: 12px 0 28px; font-size: 14px; }
+.receipt-fees { margin: 0; }
+.receipt-fee-row, .receipt-issuer-row { display: flex; justify-content: space-between; gap: 16px; padding: 7px 0; border-bottom: 1px solid var(--receipt-rule); }
+.receipt-fee-row dt, .receipt-fee-row dd, .receipt-issuer-row dt, .receipt-issuer-row dd { margin: 0; }
+.receipt-fee-row dd, .receipt-number strong { font-family: ui-monospace, monospace; font-variant-numeric: tabular-nums; }
+.receipt-fee-row.is-surcharge-total { font-weight: 700; }
+.receipt-fee-row.is-surcharge-total.has-breakdown { border-bottom: 0; }
+.receipt-fee-row.receipt-surcharge-breakdown { padding: 3px 0 5px 16px; color: #526078; font-size: 12px; }
+.receipt-fee-row.is-total { border-bottom: 2px solid var(--receipt-ink); font-weight: 800; }
+.receipt-document-footer { margin-top: 32px; align-items: flex-end; }
+.receipt-issuer { min-width: 0; font-size: 12px; }
+.receipt-issuer-name { margin: 0 0 8px; font-size: 16px; font-weight: 800; }
+.receipt-issuer dl { margin: 0; }
+.receipt-issuer-row { justify-content: flex-start; border: 0; padding: 2px 0; }
+.receipt-issuer-row dt { flex: 0 0 4.5em; color: #526078; }
+.receipt-number { flex: 0 0 auto; margin: 0; padding: 10px 12px; border-left: 4px solid var(--receipt-road); background: #eff6ff; }
+.receipt-number span, .receipt-number strong { display: block; }
+.receipt-number span { color: #526078; font: 700 9px/1.2 ui-monospace, monospace; letter-spacing: .12em; }
+.receipt-number strong { margin-top: 4px; font-size: 12px; }
+.receipt-public-error { padding: 28px; border: 1px solid #f0b7b7; border-radius: 12px; background: #fff7f7; color: #7f1d1d; }
+.receipt-public-error h1 { margin-top: 0; font-size: 20px; }
+.receipt-public-privacy { margin: 14px 0 0; color: #526078; font-size: 12px; overflow-wrap: anywhere; }
+
+@media (max-width: 480px) {
+  .receipt-public-shell { padding: 8px; }
+  .receipt-document-header, .receipt-document-footer { flex-direction: column; }
+  .receipt-number { align-self: stretch; }
+}
+
+@media print {
+  @page { size: A4; margin: 14mm; }
+  body { background: #fff; }
+  .receipt-public-header, .receipt-public-tools, .receipt-public-privacy { display: none !important; }
+  .receipt-public-shell { width: 100%; padding: 0; }
+  .receipt-document { padding: 0; border-top-color: #000; box-shadow: none; color: #000; print-color-adjust: exact; }
+  .receipt-number { border-left-color: #000; background: transparent; }
+}

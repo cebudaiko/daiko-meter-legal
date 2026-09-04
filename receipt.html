@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: blob:; style-src 'self'; script-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>領収証を受け取る｜じろちゃん</title>
+  <link rel="stylesheet" href="./css/receipt-public.css">
+</head>
+<body>
+  <main class="receipt-public-shell">
+    <header class="receipt-public-header">
+      <p>じろちゃん 領収証</p>
+      <h1>領収証を受け取る</h1>
+      <p>QRコード内の情報をこの端末だけで読み取ります。</p>
+    </header>
+    <section class="receipt-public-tools" aria-label="領収証の操作">
+      <div class="receipt-public-actions">
+        <button type="button" id="receiptPublicDownload">PDFを保存</button>
+        <button type="button" id="receiptPublicPrint">印刷する</button>
+      </div>
+      <p id="receiptPublicStatus" role="status" aria-live="polite" aria-atomic="true">領収証データを読み取っています。</p>
+    </section>
+    <div id="receiptPublicDocument" aria-live="polite"></div>
+    <p class="receipt-public-privacy">宛名・車両・走行距離・時間・GPS・出発地・目的地・経路は含まれません。</p>
+  </main>
+  <script type="module" src="./js/receipt/receipt-public-viewer.js"></script>
+</body>
+</html>
