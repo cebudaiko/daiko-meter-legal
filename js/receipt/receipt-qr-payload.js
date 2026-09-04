@@ -1,5 +1,6 @@
 const PREFIX = 'r1.';
 const MAX_COMPRESSED_BYTES = 4_096;
+const MAX_BASE64URL_CHARS = Math.ceil((MAX_COMPRESSED_BYTES * 8) / 6);
 export const MAX_RECEIPT_QR_DECOMPRESSED_BYTES = 16_384;
 const MAX_OPTIONS = 20;
 const FNV64_OFFSET = 14695981039346656037n;
@@ -129,7 +130,9 @@ function toBase64Url(bytes) {
 }
 
 function fromBase64Url(value) {
-  if (typeof value !== 'string' || !/^[A-Za-z0-9_-]+$/.test(value)) throw payloadError('invalid base64url payload');
+  if (typeof value !== 'string' || value.length > MAX_BASE64URL_CHARS || !/^[A-Za-z0-9_-]+$/.test(value)) {
+    throw payloadError('invalid base64url payload');
+  }
   try {
     const binary = atob(value.replaceAll('-', '+').replaceAll('_', '/'));
     return Uint8Array.from(binary, (character) => character.charCodeAt(0));
