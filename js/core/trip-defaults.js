@@ -2,6 +2,7 @@ import { getConfig } from '../fare/config.js';
 import { createFareSnapshot } from '../fare/rate-snapshot.js';
 import { normalizeOperatingDayCutoff } from '../history/operating-day.js';
 import { createRewardAssignments } from '../rewards/assignments.js';
+import { confirmedRoute } from './route-label.js';
 
 const EMPTY_REWARD_ASSIGNMENTS = Object.freeze([]);
 
@@ -42,6 +43,10 @@ export function createMeterState() {
     activeRewardProfileIds: new Set(),
     lockedRewardAssignments: EMPTY_REWARD_ASSIGNMENTS,
     carNumber: '',
+    routeOrigin: '',
+    routeDestination: '',
+    plannedRouteOrigin: '',
+    plannedRouteDestination: '',
 
     startTime: null,
     startedAt: '',
@@ -86,6 +91,7 @@ export function createMeterState() {
 }
 
 export function resetTripForStart(state, carNumber, now = Date.now(), config = getConfig()) {
+  const plannedRoute = confirmedRoute(state.plannedRouteOrigin, state.plannedRouteDestination);
   state.mode = 'running';
   state.isFinalizing = false;
   state.startTime = now;
@@ -110,6 +116,10 @@ export function resetTripForStart(state, carNumber, now = Date.now(), config = g
   state.distanceKm = 0;
   state.currentSpeed = 0;
   state.carNumber = carNumber;
+  state.routeOrigin = plannedRoute?.origin || '';
+  state.routeDestination = plannedRoute?.destination || '';
+  state.plannedRouteOrigin = '';
+  state.plannedRouteDestination = '';
   state.lowSpeedSec = 0;
   state.lastFixTs = null;
   state.lastFreshFixMonoMs = null;

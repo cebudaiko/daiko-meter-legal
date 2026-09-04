@@ -1,5 +1,6 @@
 import { operatingDayKey, normalizeOperatingDayCutoff } from '../history/operating-day.js';
 import { createRewardAssignments } from '../rewards/assignments.js';
+import { confirmedRoute } from './route-label.js';
 
 function nonNegativeIntegerYen(value) {
   const number = Number(value);
@@ -21,6 +22,7 @@ export function buildTripRecord(state, { companies, gpsResult, tenantCode, now =
   const endedAt = state.endedAt || new Date(now).toISOString();
   state.endedAt = endedAt;
   const operatingDayCutoff = normalizeOperatingDayCutoff(state.lockedOperatingDayCutoff);
+  const route = confirmedRoute(state.routeOrigin, state.routeDestination);
 
   return {
     id: Date.now().toString(36),
@@ -37,6 +39,7 @@ export function buildTripRecord(state, { companies, gpsResult, tenantCode, now =
     isSpecialPeriod,
     isWinter,
     carNumber: state.carNumber,
+    ...(route ? { routeOrigin: route.origin, routeDestination: route.destination } : {}),
     distanceKm: state.distanceKm,
     durationMs: state.elapsedMs,
     waitMs: state.totalWaitMs,
